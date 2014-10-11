@@ -21,6 +21,9 @@ class BetterMap(object):
 		for i in range(n):
 			self.maps.append(LinearMap())
 
+	def __len__(self):
+		return len(self.maps)
+
 	def find_map(self, k):
 		index = hash(k) % len(self.maps)
 		return self.maps[index]
@@ -36,7 +39,6 @@ class BetterMap(object):
 class HashMap(object):
 
 	def __init__(self):
-		print "init"
 		self.maps = BetterMap(2)
 		self.num = 0
 
@@ -52,7 +54,7 @@ class HashMap(object):
 	def resize():
 		new_maps = BetterMap(self.num * 2)
 
-		for m in self.maps.maps:
+		for m in len(self.maps):
 			for k,v in m.items:
 				new_maps.add(k,v)
 		self.maps = new_maps
@@ -60,13 +62,13 @@ class HashMap(object):
 
 def main(script, *args):
 
-    lm = LinearMap()
-    lm.add("a","linmapval")
-    print lm.get("a")
+    # lm = LinearMap()
+    # lm.add("a","linmapval")
+    # print lm.get("a")
 
-    bm = BetterMap()
-    bm.add("a","bettermapval")
-    print bm.get("a")    
+    # bm = BetterMap()
+    # bm.add("a","bettermapval")
+    # print bm.get("a")    
 
     hm = HashMap()
     hm.add("hashingkey","hashvalue")
