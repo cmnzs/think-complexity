@@ -188,13 +188,13 @@ class RandomLayout(Layout):
 def main(script, n='10', *args):
 
     # create n Vertices
-    n = int(n)
+    n = int(10)
     labels = string.ascii_lowercase + string.ascii_uppercase
     vs = [Vertex(c) for c in labels[:n]]
 
     # create a graph and a layout
     g = Graph(vs)
-    g.add_all_edges()
+    g.add_regular_edges(9)
     layout = CircleLayout(g)
 
     # draw the graph

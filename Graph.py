@@ -6,6 +6,10 @@ http://greenteapress.com/complexity
 Copyright 2011 Allen B. Downey.
 Distributed under the GNU General Public License at gnu.org/licenses/gpl.html.
 """
+import copy
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 class Vertex(object):
     """A Vertex is a node in a graph."""
@@ -110,11 +114,11 @@ class Graph(dict):
         for v in vs:
             for w in vs:
                 a.append(self.get_edge(v,w))
-        return list(set(a))[1:]
+        return [x for x in list(set(a)) if x is not None]
 
     def out_vertices(self,v):
         """Takes a Vertex and returns a list of the adjacent vertices"""
-        self[v].keys()
+        return self[v].keys()
 
     def out_edges(self, v):
         """Takes a Vertex and returns a list of the connected edges"""
@@ -123,7 +127,7 @@ class Graph(dict):
     def add_all_edges(self):
         """ Make a complete graph from an edgeless graph: add edges between all pairs of vertices"""
 
-        #Could find all pairs of vertices using combs from itertools
+        #Could find all pairs of vertices using itertools.combinations trick
         #Going to do it manually
         vs = self.vertices()
 
@@ -132,18 +136,64 @@ class Graph(dict):
                 if i != j:
                     self.add_edge(Edge(vs[i],vs[j]))
 
+    def add_regular_edges(self, k):
+        """Add edges to an edgeless graph such that every node has degree k"""
 
+        vs = self.vertices()
+        n = len(vs)
 
+        #Cannot construct a graph if degree is greater than number of nodes
+        if k >= n:
+            raise ValueError("Not enough Vertices")
 
+        #Construction is different based on whether k is odd or even
+        if is_odd(k):
+            if is_odd(n):
+                raise ValueError("Can't have odd k and odd length")
+            self.add_regular_even(k-1)
+            self.add_regular_odd()
+        else:
+            self.add_regular_even(k)
+        
+
+    def add_regular_even(self,k):
+        """Add edges to the graph is k is even"""
+        vs = self.vertices()
+        dup = vs * 2
+        
+        for i, v in enumerate(vs):
+            for j in range(1,k/2+1):
+                w = dup[i+j]
+                self.add_edge(Edge(v, w))
+
+    def add_regular_odd(self):
+        """Add edge to the graph if k is odd"""
+        vs = self.vertices()
+        n = len(vs)
+        dup = vs * 2
+
+        for i in range(n/2):
+            v = dup[i]
+            w = dup[i+n/2]
+            self.add_edge(Edge(v, w))
+
+def is_odd(n):
+    return n%2;
 
 def main(script, *args):
     v = Vertex('v')
-    print v
+    
     w = Vertex('w')
-    print w
+    
+    p = Vertex('p')
+    
+    q = Vertex('q')
+    
     e = Edge(v, w)
-    print e
-    g = Graph([v,w], [e])
+    
+    g = Graph([v,w,p,q], [])
+    
+    g.add_regular_edges(2)
     print g
 
 
