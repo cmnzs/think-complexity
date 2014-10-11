@@ -35,6 +35,11 @@ class BetterMap(object):
 	def get(self, k):
 		m = self.find_map(k)
 		return m.get(k)
+	
+	def iteritems(self):
+		for x in self.maps:
+			yield x
+
 
 class HashMap(object):
 
@@ -54,7 +59,7 @@ class HashMap(object):
 	def resize():
 		new_maps = BetterMap(self.num * 2)
 
-		for m in len(self.maps):
+		for m in self.maps.iteritems():
 			for k,v in m.items:
 				new_maps.add(k,v)
 		self.maps = new_maps
